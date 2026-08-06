@@ -1,0 +1,64 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  * {
+    @apply border-surface-strong/20;
+  }
+  html {
+    scroll-behavior: smooth;
+  }
+  body {
+    @apply bg-surface-base text-ink-primary font-sans antialiased;
+  }
+  h1, h2, h3, h4 {
+    @apply font-display;
+  }
+  /* Visible focus ring everywhere - accessibility requirement from design system (WCAG 2.2 AA) */
+  :focus-visible {
+    outline: 2px solid #d9ae52;
+    outline-offset: 3px;
+    border-radius: 4px;
+  }
+  ::selection {
+    background: #641d1f;
+    color: #fbf4e4;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+}
+
+@layer components {
+  .btn-primary {
+    @apply inline-flex items-center justify-center gap-2 rounded-md bg-gold-400 text-surface-base font-semibold
+           px-8 py-3 transition-all duration-fast hover:bg-gold-300 active:scale-[0.98]
+           disabled:opacity-40 disabled:pointer-events-none;
+  }
+  .btn-secondary {
+    @apply inline-flex items-center justify-center gap-2 rounded-md border border-ink-primary/25 text-ink-primary
+           font-semibold px-8 py-3 transition-all duration-fast hover:border-gold-400 hover:text-gold-300
+           active:scale-[0.98] disabled:opacity-40 disabled:pointer-events-none;
+  }
+  .btn-ghost {
+    @apply inline-flex items-center justify-center gap-2 rounded-sm px-5 py-2.5 text-ink-secondary
+           transition-colors duration-fast hover:text-gold-300 disabled:opacity-40;
+  }
+  .input-field {
+    @apply w-full rounded-xs bg-surface-muted border border-ink-primary/15 px-5 py-3 text-ink-primary
+           placeholder:text-ink-inverse/60 transition-colors duration-fast
+           focus:border-gold-400 focus:outline-none;
+  }
+  .card-surface {
+    @apply bg-surface-raised/60 border border-surface-strong/40 rounded-xs;
+  }
+  .eyebrow {
+    @apply text-xs tracking-[0.25em] uppercase text-gold-300 font-semibold;
+  }
+}
