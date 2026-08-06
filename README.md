@@ -1,4 +1,4 @@
-# Amara — Jewelry Storefront + Admin Dashboard (Frontend)
+# Luce Jewels — Jewelry Storefront + Admin Dashboard (Frontend)
 
 React 18 + Vite + Tailwind CSS + Framer Motion. Built against the `jewelry-backend`
 API from the previous step — no other backend changes needed.
