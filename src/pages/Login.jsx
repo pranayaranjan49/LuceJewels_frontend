@@ -68,7 +68,7 @@ export default function Login() {
   return (
     <div className="mx-auto flex min-h-[80vh] max-w-md flex-col justify-center px-6 py-16">
       <p className="eyebrow text-center">Welcome</p>
-      <h1 className="mt-2 text-center font-display text-3xl text-ink-primary">Sign in to Luce Jewels</h1>
+      <h1 className="mt-2 text-center font-display text-3xl text-ink-primary">Sign in to Luxe Jewels</h1>
       <p className="mt-2 text-center text-sm text-ink-inverse">
         New here? An account is created automatically on your first sign-in.
       </p>
