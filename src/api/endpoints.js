@@ -1,6 +1,7 @@
 import api from './client';
 
 // --- Auth ---
+export const simpleLogin = (payload) => api.post('/auth/login', payload);
 export const sendOtp = (payload) => api.post('/auth/send-otp', payload);
 export const verifyOtp = (payload) => api.post('/auth/verify-otp', payload);
 export const getMe = () => api.get('/auth/me');
