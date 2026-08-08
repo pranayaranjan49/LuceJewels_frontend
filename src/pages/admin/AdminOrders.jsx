@@ -44,9 +44,9 @@ export default function AdminOrders() {
       <h1 className="mt-2 font-display text-3xl text-ink-primary">Orders</h1>
 
       <div className="mt-6 flex flex-wrap gap-2">
-        <button onClick={() => setFilter('')} className={`rounded-sm px-4 py-2 text-xs uppercase ${!filter ? 'bg-gold-400 text-surface-base' : 'border border-ink-primary/20 text-ink-secondary'}`}>All</button>
+        <button onClick={() => setFilter('')} className={`rounded-sm px-4 py-2 text-xs uppercase ${!filter ? 'bg-gold-400 text-ink-primary' : 'border border-ink-primary/20 text-ink-secondary'}`}>All</button>
         {STATUSES.map((s) => (
-          <button key={s} onClick={() => setFilter(s)} className={`rounded-sm px-4 py-2 text-xs uppercase ${filter === s ? 'bg-gold-400 text-surface-base' : 'border border-ink-primary/20 text-ink-secondary'}`}>{s}</button>
+          <button key={s} onClick={() => setFilter(s)} className={`rounded-sm px-4 py-2 text-xs uppercase ${filter === s ? 'bg-gold-400 text-ink-primary' : 'border border-ink-primary/20 text-ink-secondary'}`}>{s}</button>
         ))}
       </div>
 

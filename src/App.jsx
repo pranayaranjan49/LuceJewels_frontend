@@ -17,6 +17,7 @@ import NotFound from './pages/NotFound';
 import AdminOverview from './pages/admin/AdminOverview';
 import AdminProducts from './pages/admin/AdminProducts';
 import AdminCategories from './pages/admin/AdminCategories';
+import AdminBanners from './pages/admin/AdminBanners';
 import AdminOrders from './pages/admin/AdminOrders';
 import AdminUsers from './pages/admin/AdminUsers';
 import AdminCampaigns from './pages/admin/AdminCampaigns';
@@ -28,9 +29,9 @@ export default function App() {
         position="top-center"
         toastOptions={{
           style: {
-            background: '#240606',
-            color: '#dcdbd8',
-            border: '1px solid #641d1f',
+            background: '#fdf1f0',
+            color: '#3a2226',
+            border: '1px solid #e7a9b4',
           },
         }}
       />
@@ -73,6 +74,7 @@ export default function App() {
           <Route index element={<AdminOverview />} />
           <Route path="products" element={<AdminProducts />} />
           <Route path="categories" element={<AdminCategories />} />
+          <Route path="banners" element={<AdminBanners />} />
           <Route path="orders" element={<AdminOrders />} />
           <Route path="users" element={<AdminUsers />} />
           <Route path="campaigns" element={<AdminCampaigns />} />

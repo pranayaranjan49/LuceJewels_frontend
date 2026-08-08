@@ -104,7 +104,7 @@ export default function AdminCategories() {
         <form onSubmit={handleSubmit} className="space-y-4">
           <input required placeholder="Category name (e.g. Rings)" value={name} onChange={(e) => setName(e.target.value)} className="input-field" />
           <textarea placeholder="Short description" value={description} onChange={(e) => setDescription(e.target.value)} rows={3} className="input-field" />
-          <input type="file" accept="image/*" onChange={(e) => setFile(e.target.files[0])} className="block w-full text-sm text-ink-secondary file:mr-4 file:rounded-sm file:border-0 file:bg-gold-400 file:px-4 file:py-2 file:text-surface-base file:font-semibold" />
+          <input type="file" accept="image/*" onChange={(e) => setFile(e.target.files[0])} className="block w-full text-sm text-ink-secondary file:mr-4 file:rounded-sm file:border-0 file:bg-gold-400 file:px-4 file:py-2 file:text-ink-primary file:font-semibold" />
           <button type="submit" disabled={saving} className="btn-primary w-full">{saving ? 'Saving…' : 'Save'}</button>
         </form>
       </Modal>

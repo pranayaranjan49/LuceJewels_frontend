@@ -91,7 +91,7 @@ export default function Shop() {
           <button
             onClick={() => updateParam('category', '')}
             className={`rounded-sm px-4 py-2 text-xs uppercase tracking-wide transition-colors ${
-              !categorySlug ? 'bg-gold-400 text-surface-base' : 'border border-ink-primary/20 text-ink-secondary hover:border-gold-400'
+              !categorySlug ? 'bg-gold-400 text-ink-primary' : 'border border-ink-primary/20 text-ink-secondary hover:border-gold-400'
             }`}
           >
             All
@@ -101,7 +101,7 @@ export default function Shop() {
               key={c._id}
               onClick={() => updateParam('category', c.slug)}
               className={`rounded-sm px-4 py-2 text-xs uppercase tracking-wide transition-colors ${
-                categorySlug === c.slug ? 'bg-gold-400 text-surface-base' : 'border border-ink-primary/20 text-ink-secondary hover:border-gold-400'
+                categorySlug === c.slug ? 'bg-gold-400 text-ink-primary' : 'border border-ink-primary/20 text-ink-secondary hover:border-gold-400'
               }`}
             >
               {c.name}
@@ -126,11 +126,11 @@ export default function Shop() {
           animate={{ opacity: 1, height: 'auto' }}
           className="mb-8 flex flex-wrap gap-2 lg:hidden"
         >
-          <button onClick={() => updateParam('category', '')} className={`rounded-sm px-4 py-2 text-xs ${!categorySlug ? 'bg-gold-400 text-surface-base' : 'border border-ink-primary/20 text-ink-secondary'}`}>
+          <button onClick={() => updateParam('category', '')} className={`rounded-sm px-4 py-2 text-xs ${!categorySlug ? 'bg-gold-400 text-ink-primary' : 'border border-ink-primary/20 text-ink-secondary'}`}>
             All
           </button>
           {categories.map((c) => (
-            <button key={c._id} onClick={() => updateParam('category', c.slug)} className={`rounded-sm px-4 py-2 text-xs ${categorySlug === c.slug ? 'bg-gold-400 text-surface-base' : 'border border-ink-primary/20 text-ink-secondary'}`}>
+            <button key={c._id} onClick={() => updateParam('category', c.slug)} className={`rounded-sm px-4 py-2 text-xs ${categorySlug === c.slug ? 'bg-gold-400 text-ink-primary' : 'border border-ink-primary/20 text-ink-secondary'}`}>
               {c.name}
             </button>
           ))}
@@ -157,7 +157,7 @@ export default function Shop() {
               key={p}
               onClick={() => updateParam('page', String(p))}
               className={`h-10 w-10 rounded-full text-sm transition-colors ${
-                p === meta.page ? 'bg-gold-400 text-surface-base' : 'text-ink-secondary hover:bg-surface-muted'
+                p === meta.page ? 'bg-gold-400 text-ink-primary' : 'text-ink-secondary hover:bg-surface-muted'
               }`}
             >
               {p}

@@ -4,6 +4,7 @@ import { HiOutlineTrash } from 'react-icons/hi';
 import { useCart } from '../context/CartContext';
 import { useAuth } from '../context/AuthContext';
 import { formatINR } from '../components/ui/Price';
+import FloatingBlobs from '../components/ui/FloatingBlobs';
 
 export default function Cart() {
   const { items, updateQuantity, removeItem, total } = useCart();
@@ -17,16 +18,21 @@ export default function Cart() {
 
   if (items.length === 0) {
     return (
-      <div className="mx-auto max-w-2xl px-6 py-28 text-center">
-        <h1 className="font-display text-3xl text-ink-primary">Your cart is empty</h1>
-        <p className="mt-2 text-ink-inverse">Browse the collection and find something worth keeping.</p>
-        <Link to="/shop" className="btn-primary mt-8 inline-flex">Shop Jewellery</Link>
+      <div className="relative overflow-hidden py-28">
+        <FloatingBlobs />
+        <div className="relative z-10 mx-auto max-w-2xl px-6 text-center">
+          <h1 className="font-display text-3xl text-ink-primary">Your cart is empty</h1>
+          <p className="mt-2 text-ink-inverse">Browse the collection and find something worth keeping.</p>
+          <Link to="/shop" className="btn-primary mt-8 inline-flex">Shop Jewellery</Link>
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="mx-auto max-w-5xl px-6 py-14 lg:px-10">
+    <div className="relative overflow-hidden">
+      <FloatingBlobs />
+      <div className="relative z-10 mx-auto max-w-5xl px-6 py-14 lg:px-10">
       <h1 className="font-display text-3xl text-ink-primary">Your Cart</h1>
 
       <div className="mt-10 grid grid-cols-1 gap-12 lg:grid-cols-3">
@@ -81,6 +87,7 @@ export default function Cart() {
           </div>
           <button onClick={handleCheckout} className="btn-primary mt-6 w-full">Checkout</button>
         </div>
+      </div>
       </div>
     </div>
   );

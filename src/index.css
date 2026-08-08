@@ -22,8 +22,8 @@
     border-radius: 4px;
   }
   ::selection {
-    background: #641d1f;
-    color: #fbf4e4;
+    background: #e7a9b4;
+    color: #3a2226;
   }
   @media (prefers-reduced-motion: reduce) {
     *, *::before, *::after {
@@ -37,7 +37,7 @@
 
 @layer components {
   .btn-primary {
-    @apply inline-flex items-center justify-center gap-2 rounded-md bg-gold-400 text-surface-base font-semibold
+    @apply inline-flex items-center justify-center gap-2 rounded-md bg-gold-400 text-ink-primary font-semibold
            px-8 py-3 transition-all duration-fast hover:bg-gold-300 active:scale-[0.98]
            disabled:opacity-40 disabled:pointer-events-none;
   }
@@ -56,7 +56,7 @@
            focus:border-gold-400 focus:outline-none;
   }
   .card-surface {
-    @apply bg-surface-raised/60 border border-surface-strong/40 rounded-xs;
+    @apply bg-surface-raised/50 border border-surface-strong/30 rounded-xs shadow-soft;
   }
   .eyebrow {
     @apply text-xs tracking-[0.25em] uppercase text-gold-300 font-semibold;

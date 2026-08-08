@@ -4,6 +4,7 @@ import toast from 'react-hot-toast';
 import { createOrder } from '../api/endpoints';
 import { useCart } from '../context/CartContext';
 import { formatINR } from '../components/ui/Price';
+import FloatingBlobs from '../components/ui/FloatingBlobs';
 
 export default function Checkout() {
   const { items, total, clearCart } = useCart();
@@ -34,14 +35,19 @@ export default function Checkout() {
 
   if (items.length === 0) {
     return (
-      <div className="mx-auto max-w-2xl px-6 py-28 text-center">
-        <p className="font-display text-2xl text-ink-primary">Nothing to check out yet.</p>
+      <div className="relative overflow-hidden py-28">
+        <FloatingBlobs />
+        <div className="relative z-10 mx-auto max-w-2xl px-6 text-center">
+          <p className="font-display text-2xl text-ink-primary">Nothing to check out yet.</p>
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="mx-auto max-w-4xl px-6 py-14 lg:px-10">
+    <div className="relative overflow-hidden">
+      <FloatingBlobs />
+      <div className="relative z-10 mx-auto max-w-4xl px-6 py-14 lg:px-10">
       <h1 className="font-display text-3xl text-ink-primary">Checkout</h1>
 
       <form onSubmit={handlePlaceOrder} className="mt-10 grid grid-cols-1 gap-12 lg:grid-cols-3">
@@ -77,6 +83,7 @@ export default function Checkout() {
           </button>
         </div>
       </form>
+      </div>
     </div>
   );
 }

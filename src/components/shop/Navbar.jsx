@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Link, NavLink, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { HiOutlineShoppingBag, HiOutlineUser, HiOutlineMenu, HiOutlineX, HiOutlineSearch } from 'react-icons/hi';
@@ -14,26 +14,47 @@ const links = [
 
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
+  const [hidden, setHidden] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const { isAuthenticated, isAdmin, user, logout } = useAuth();
   const { count } = useCart();
   const navigate = useNavigate();
+  const lastScrollY = useRef(0);
 
+  // Auto-hide the header on scroll-down, reveal it on scroll-up - keeps the
+  // small screen real estate on mobile free while browsing product grids.
+  // Skipped entirely while the mobile menu is open, so it can't slide away
+  // mid-interaction.
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 24);
-    window.addEventListener('scroll', onScroll);
+    const onScroll = () => {
+      const y = window.scrollY;
+      setScrolled(y > 24);
+
+      if (menuOpen) {
+        lastScrollY.current = y;
+        return;
+      }
+
+      const goingDown = y > lastScrollY.current;
+      const pastThreshold = y > 120;
+      setHidden(goingDown && pastThreshold);
+      lastScrollY.current = y;
+    };
+    window.addEventListener('scroll', onScroll, { passive: true });
     return () => window.removeEventListener('scroll', onScroll);
-  }, []);
+  }, [menuOpen]);
 
   return (
-    <header
+    <motion.header
+      animate={{ y: hidden ? '-100%' : '0%' }}
+      transition={{ duration: 0.3, ease: 'easeInOut' }}
       className={`sticky top-0 z-50 transition-colors duration-normal ${
-        scrolled ? 'bg-surface-base/90 backdrop-blur-md border-b border-surface-strong/30' : 'bg-transparent'
+        scrolled ? 'bg-surface-base/90 backdrop-blur-md border-b border-surface-strong/30 shadow-soft' : 'bg-surface-base/60 backdrop-blur-sm'
       }`}
     >
-      <nav className="mx-auto flex max-w-7xl items-center justify-between px-6 py-5 lg:px-10">
-        <Link to="/" className="font-display text-2xl tracking-wide text-ink-primary">
-          Luxe Jewels
+      <nav className="mx-auto flex max-w-7xl items-center justify-between px-4 py-4 sm:px-6 sm:py-5 lg:px-10">
+        <Link to="/" className="font-display text-xl tracking-wide text-ink-primary sm:text-2xl">
+          LUXE JEWELS
         </Link>
 
         <div className="hidden lg:flex items-center gap-9">
@@ -42,8 +63,8 @@ export default function Navbar() {
               key={l.label}
               to={l.to}
               className={({ isActive }) =>
-                `text-sm tracking-wide transition-colors duration-fast hover:text-gold-300 ${
-                  isActive ? 'text-gold-300' : 'text-ink-secondary'
+                `text-sm tracking-wide transition-colors duration-fast hover:text-gold-500 ${
+                  isActive ? 'text-gold-500' : 'text-ink-secondary'
                 }`
               }
             >
@@ -52,15 +73,15 @@ export default function Navbar() {
           ))}
         </div>
 
-        <div className="flex items-center gap-5">
-          <Link to="/shop" aria-label="Search jewellery" className="hidden sm:block text-ink-secondary hover:text-gold-300 transition-colors">
+        <div className="flex items-center gap-4 sm:gap-5">
+          <Link to="/shop" aria-label="Search jewellery" className="hidden sm:block text-ink-secondary hover:text-gold-500 transition-colors">
             <HiOutlineSearch size={20} />
           </Link>
 
-          <Link to="/cart" aria-label="View cart" className="relative text-ink-secondary hover:text-gold-300 transition-colors">
+          <Link to="/cart" aria-label="View cart" className="relative text-ink-secondary hover:text-gold-500 transition-colors">
             <HiOutlineShoppingBag size={20} />
             {count > 0 && (
-              <span className="absolute -top-2 -right-2 flex h-4 w-4 items-center justify-center rounded-full bg-gold-400 text-[10px] font-bold text-surface-base">
+              <span className="absolute -top-2 -right-2 flex h-4 w-4 items-center justify-center rounded-full bg-gold-400 text-[10px] font-bold text-ink-primary">
                 {count}
               </span>
             )}
@@ -69,7 +90,7 @@ export default function Navbar() {
           {isAuthenticated ? (
             <div className="hidden sm:flex items-center gap-3">
               {isAdmin && (
-                <Link to="/admin" className="text-xs uppercase tracking-wide text-gold-300 hover:underline">
+                <Link to="/admin" className="text-xs uppercase tracking-wide text-gold-500 hover:underline">
                   Admin
                 </Link>
               )}
@@ -79,13 +100,13 @@ export default function Navbar() {
                   logout();
                   navigate('/');
                 }}
-                className="text-xs text-ink-secondary hover:text-gold-300"
+                className="text-xs text-ink-secondary hover:text-gold-500"
               >
                 Logout
               </button>
             </div>
           ) : (
-            <Link to="/login" aria-label="Login" className="hidden sm:block text-ink-secondary hover:text-gold-300 transition-colors">
+            <Link to="/login" aria-label="Login" className="hidden sm:block text-ink-secondary hover:text-gold-500 transition-colors">
               <HiOutlineUser size={20} />
             </Link>
           )}
@@ -116,7 +137,7 @@ export default function Navbar() {
                   key={l.label}
                   to={l.to}
                   onClick={() => setMenuOpen(false)}
-                  className="py-3 text-ink-secondary hover:text-gold-300 border-b border-surface-strong/20"
+                  className="py-3 text-ink-secondary hover:text-gold-500 border-b border-surface-strong/20"
                 >
                   {l.label}
                 </Link>
@@ -124,7 +145,7 @@ export default function Navbar() {
               {isAuthenticated ? (
                 <>
                   {isAdmin && (
-                    <Link to="/admin" onClick={() => setMenuOpen(false)} className="py-3 text-gold-300">
+                    <Link to="/admin" onClick={() => setMenuOpen(false)} className="py-3 text-gold-500">
                       Admin Dashboard
                     </Link>
                   )}
@@ -140,7 +161,7 @@ export default function Navbar() {
                   </button>
                 </>
               ) : (
-                <Link to="/login" onClick={() => setMenuOpen(false)} className="py-3 text-gold-300">
+                <Link to="/login" onClick={() => setMenuOpen(false)} className="py-3 text-gold-500">
                   Login / Register
                 </Link>
               )}
@@ -148,6 +169,6 @@ export default function Navbar() {
           </motion.div>
         )}
       </AnimatePresence>
-    </header>
+    </motion.header>
   );
 }

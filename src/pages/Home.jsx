@@ -1,12 +1,10 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { motion } from 'framer-motion';
 import { getCategories, getProducts } from '../api/endpoints';
 import CategoryCard from '../components/shop/CategoryCard';
 import ProductCard from '../components/shop/ProductCard';
+import HeroCarousel from '../components/shop/HeroCarousel';
 import { ProductCardSkeleton } from '../components/ui/Skeleton';
-
-const HERO_IMG = 'https://images.unsplash.com/photo-1617038260897-41a1f14a8ca0?q=80&w=1600&auto=format&fit=crop';
 
 export default function Home() {
   const [categories, setCategories] = useState([]);
@@ -30,54 +28,7 @@ export default function Home() {
 
   return (
     <div>
-      {/* Hero */}
-      <section className="relative min-h-[88vh] flex items-end overflow-hidden">
-        <motion.img
-          src={HERO_IMG}
-          alt="Model wearing fine gold jewellery"
-          initial={{ scale: 1.15, opacity: 0.6 }}
-          animate={{ scale: 1, opacity: 1 }}
-          transition={{ duration: 1.6, ease: [0.22, 1, 0.36, 1] }}
-          className="absolute inset-0 h-full w-full object-cover"
-        />
-        <div className="absolute inset-0 bg-gradient-to-t from-surface-base via-surface-base/40 to-surface-base/10" />
-
-        <div className="relative z-10 mx-auto w-full max-w-7xl px-6 pb-20 lg:px-10">
-          <motion.p
-            initial={{ opacity: 0, y: 12 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.4, duration: 0.6 }}
-            className="eyebrow"
-          >
-            The 2026 Heirloom Edit
-          </motion.p>
-          <motion.h1
-            initial={{ opacity: 0, y: 24 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.55, duration: 0.7 }}
-            className="mt-4 max-w-2xl font-display text-4xl leading-[1.05] text-ink-primary sm:text-[56px]"
-          >
-            Jewellery worth passing down.
-          </motion.h1>
-          <motion.p
-            initial={{ opacity: 0, y: 24 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.7, duration: 0.7 }}
-            className="mt-5 max-w-md text-ink-secondary"
-          >
-            Every piece is hand-finished in 22K gold and certified stones — designed to be worn today, and inherited tomorrow.
-          </motion.p>
-          <motion.div
-            initial={{ opacity: 0, y: 24 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.85, duration: 0.7 }}
-            className="mt-9 flex gap-4"
-          >
-            <Link to="/shop" className="btn-primary">Shop the Edit</Link>
-            <Link to="/shop?category=rings" className="btn-secondary">View Rings</Link>
-          </motion.div>
-        </div>
-      </section>
+      <HeroCarousel />
 
       {/* Categories */}
       <section className="mx-auto max-w-7xl px-6 py-24 lg:px-10">

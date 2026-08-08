@@ -38,3 +38,16 @@ export const getUser = (id) => api.get(`/users/${id}`);
 // --- Campaigns ---
 export const sendCampaign = (payload) => api.post('/campaigns/send', payload);
 export const getCampaigns = () => api.get('/campaigns');
+
+// --- Subscribers (newsletter signups, no account required) ---
+export const subscribe = (payload) => api.post('/subscribers', payload);
+export const getSubscribers = () => api.get('/subscribers');
+
+// --- Homepage Banners ---
+export const getBanners = () => api.get('/banners');
+export const getAllBannersAdmin = () => api.get('/banners/admin');
+export const createBanner = (formData) =>
+  api.post('/banners', formData, { headers: { 'Content-Type': 'multipart/form-data' } });
+export const updateBanner = (id, formData) =>
+  api.put(`/banners/${id}`, formData, { headers: { 'Content-Type': 'multipart/form-data' } });
+export const deleteBanner = (id) => api.delete(`/banners/${id}`);
