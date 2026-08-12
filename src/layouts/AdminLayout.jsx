@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { NavLink, Outlet, useNavigate , Link} from 'react-router-dom';
+import { Link, NavLink, Outlet, useNavigate } from 'react-router-dom';
 import { AnimatePresence, motion } from 'framer-motion';
 import {
   HiOutlineViewGrid,
@@ -31,10 +31,6 @@ function SidebarContent({ onNavigate }) {
 
   return (
     <>
-      {/* <div className="px-2 mb-10">
-        <span className="font-display text-2xl text-ink-primary">LUXE JEWELS</span>
-        <p className="text-xs text-ink-inverse mt-1">Admin Dashboard</p>
-      </div> */}
       <div className="px-2 mb-10">
         <Link to="/" className="font-display text-2xl text-ink-primary transition-colors hover:text-gold-500">
           LUXE JEWELS
@@ -90,7 +86,6 @@ export default function AdminLayout() {
 
       {/* Mobile top bar */}
       <div className="md:hidden fixed top-0 inset-x-0 z-40 flex items-center justify-between border-b border-surface-strong/30 bg-surface-base/95 backdrop-blur-md px-5 py-4">
-        {/* <span className="font-display text-xl text-ink-primary">LUXE JEWELS</span> */}
         <Link to="/" className="font-display text-xl text-ink-primary">LUXE JEWELS</Link>
         <button
           onClick={() => setDrawerOpen(true)}

@@ -1,4 +1,5 @@
 import { useEffect, useState, useCallback } from 'react';
+import { Link } from 'react-router-dom';
 import toast from 'react-hot-toast';
 import { getUsers, getUser } from '../../api/endpoints';
 import { RowSkeleton } from '../../components/ui/Skeleton';
@@ -66,12 +67,26 @@ export default function AdminUsers() {
             ) : (
               users.map((u) => (
                 <tr key={u._id} className="text-ink-secondary">
-                  <td className="px-5 py-4 text-ink-primary">{u.name}</td>
+                  <td className="px-5 py-4 text-ink-primary">
+                    <div className="flex items-center gap-2">
+                      {u.name}
+                      {/* Bright dot: unresolved complaint, needs admin attention.
+                          Light dot: this user has had a complaint before (now
+                          resolved) - persists so admins have context on repeat
+                          issues, without demanding action again. */}
+                      {u.hasUnseenComplaint && (
+                        <span title="Unresolved complaint" className="h-2 w-2 rounded-full bg-surface-strong" />
+                      )}
+                      {!u.hasUnseenComplaint && u.hasComplaintHistory && (
+                        <span title="Has had a complaint before" className="h-2 w-2 rounded-full bg-surface-strong/30" />
+                      )}
+                    </div>
+                  </td>
                   <td className="px-5 py-4">{u.email}</td>
                   <td className="px-5 py-4">{u.phone}</td>
                   <td className="px-5 py-4">{new Date(u.createdAt).toLocaleDateString()}</td>
                   <td className="px-5 py-4 text-right">
-                    <button onClick={() => openDetail(u._id)} className="text-xs text-gold-300 hover:underline">View</button>
+                    <button onClick={() => openDetail(u._id)} className="text-xs text-gold-500 hover:underline">View</button>
                   </td>
                 </tr>
               ))
@@ -88,13 +103,47 @@ export default function AdminUsers() {
             <p className="text-ink-primary font-display text-lg">{detail.user.name}</p>
             <p className="text-sm text-ink-secondary">{detail.user.email} · {detail.user.phone}</p>
             <div className="mt-4 flex gap-3 text-xs">
-              <span className={`rounded-sm px-3 py-1 ${detail.user.isEmailVerified ? 'bg-green-500/20 text-green-400' : 'bg-ink-inverse/20 text-ink-inverse'}`}>
+              <span className={`rounded-sm px-3 py-1 ${detail.user.isEmailVerified ? 'bg-green-500/20 text-green-600' : 'bg-ink-inverse/20 text-ink-inverse'}`}>
                 Email {detail.user.isEmailVerified ? 'verified' : 'unverified'}
               </span>
-              <span className={`rounded-sm px-3 py-1 ${detail.user.isPhoneVerified ? 'bg-green-500/20 text-green-400' : 'bg-ink-inverse/20 text-ink-inverse'}`}>
+              <span className={`rounded-sm px-3 py-1 ${detail.user.isPhoneVerified ? 'bg-green-500/20 text-green-600' : 'bg-ink-inverse/20 text-ink-inverse'}`}>
                 Phone {detail.user.isPhoneVerified ? 'verified' : 'unverified'}
               </span>
             </div>
+
+            <h3 className="mt-6 eyebrow">Saved Addresses ({detail.user.addresses?.length || 0})</h3>
+            <div className="mt-3 space-y-2">
+              {!detail.user.addresses || detail.user.addresses.length === 0 ? (
+                <p className="text-sm text-ink-inverse">No saved addresses.</p>
+              ) : (
+                detail.user.addresses.map((a) => (
+                  <div key={a._id} className="rounded-xs bg-surface-muted px-4 py-3">
+                    <div className="flex items-center gap-2">
+                      <span className="text-sm font-medium text-ink-primary">{a.label}</span>
+                      {a.isDefault && (
+                        <span className="rounded-sm bg-gold-400/20 px-2 py-0.5 text-[10px] font-semibold uppercase text-gold-600">Default</span>
+                      )}
+                    </div>
+                    <p className="mt-1 text-xs text-ink-secondary">
+                      {a.line1}, {a.city}, {a.state} {a.pincode}, {a.country}
+                    </p>
+                  </div>
+                ))
+              )}
+            </div>
+
+            {detail.user.phones?.length > 0 && (
+              <>
+                <h3 className="mt-6 eyebrow">Additional Phone Numbers</h3>
+                <div className="mt-3 flex flex-wrap gap-2">
+                  {detail.user.phones.map((p) => (
+                    <span key={p._id} className="rounded-sm bg-surface-muted px-3 py-1.5 text-xs text-ink-secondary">
+                      {p.number} <span className="text-ink-inverse">({p.label})</span>
+                    </span>
+                  ))}
+                </div>
+              </>
+            )}
 
             <h3 className="mt-6 eyebrow">Order History ({detail.orders.length})</h3>
             <div className="mt-3 space-y-2 max-h-64 overflow-y-auto">
@@ -102,10 +151,20 @@ export default function AdminUsers() {
                 <p className="text-sm text-ink-inverse">No orders placed yet.</p>
               ) : (
                 detail.orders.map((o) => (
-                  <div key={o._id} className="flex justify-between rounded-xs bg-surface-muted px-4 py-3 text-sm">
-                    <span className="text-ink-secondary">#{o._id.slice(-8).toUpperCase()} · {o.status}</span>
-                    <span className="text-gold-300">{formatINR(o.totalAmount)}</span>
-                  </div>
+                  <Link
+                    key={o._id}
+                    to={`/admin/orders/${o._id}`}
+                    onClick={() => setModalOpen(false)}
+                    className="flex items-center justify-between rounded-xs bg-surface-muted px-4 py-3 text-sm transition-colors hover:bg-surface-strong/10"
+                  >
+                    <span className="flex items-center gap-2 text-ink-secondary">
+                      #{o._id.slice(-8).toUpperCase()} · {o.status}
+                      {o.feedback?.isComplaint && !o.feedback.adminSeen && (
+                        <span title="Unresolved complaint" className="h-2 w-2 rounded-full bg-surface-strong" />
+                      )}
+                    </span>
+                    <span className="text-gold-500">{formatINR(o.totalAmount)}</span>
+                  </Link>
                 ))
               )}
             </div>

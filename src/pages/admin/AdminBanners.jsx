@@ -6,7 +6,6 @@ import {
   createBanner,
   updateBanner,
   deleteBanner,
-  getCategories
 } from '../../api/endpoints';
 import Modal from '../../components/ui/Modal';
 
@@ -20,7 +19,6 @@ export default function AdminBanners() {
   const [form, setForm] = useState(emptyForm);
   const [file, setFile] = useState(null);
   const [saving, setSaving] = useState(false);
-  const [categories, setCategories] = useState([]);
 
   const fetchAll = useCallback(() => {
     setLoading(true);
@@ -31,9 +29,6 @@ export default function AdminBanners() {
   }, []);
 
   useEffect(() => { fetchAll(); }, [fetchAll]);
-  useEffect(() => {
-    getCategories().then((res) => setCategories(res.data.data)).catch(() => {});
-  }, []);
 
   const openCreate = () => {
     setEditing(null);
@@ -152,43 +147,10 @@ export default function AdminBanners() {
         <form onSubmit={handleSubmit} className="space-y-4">
           <input name="title" required placeholder="Headline (e.g. Jewellery worth passing down.)" value={form.title} onChange={handleChange} className="input-field" />
           <textarea name="subtitle" placeholder="Subtitle text" value={form.subtitle} onChange={handleChange} rows={2} className="input-field" />
-          {/* <div className="grid grid-cols-2 gap-4">
-            <input name="ctaLabel" placeholder="Button label" value={form.ctaLabel} onChange={handleChange} className="input-field" />
-            <input name="ctaLink" placeholder="Button link (e.g. /shop)" value={form.ctaLink} onChange={handleChange} className="input-field" />
-          </div> */}
           <div className="grid grid-cols-2 gap-4">
             <input name="ctaLabel" placeholder="Button label" value={form.ctaLabel} onChange={handleChange} className="input-field" />
-
-            {/* Clicking the banner navigates to whatever ctaLink ends up being.
-                This select just fills that field for you when you pick a real
-                collection, instead of typing the URL by hand. */}
-            <select
-              value={form.ctaLink}
-              onChange={(e) => setForm((f) => ({ ...f, ctaLink: e.target.value }))}
-              className="input-field"
-            >
-              <option value="/shop">All Jewellery</option>
-              {categories.map((c) => (
-                <option key={c._id} value={`/shop?category=${c.slug}`}>
-                  {c.name}
-                </option>
-              ))}
-              <option value="__custom__">Custom link…</option>
-            </select>
+            <input name="ctaLink" placeholder="Button link (e.g. /shop)" value={form.ctaLink} onChange={handleChange} className="input-field" />
           </div>
-
-          {/* Only shown when "Custom link…" is picked above, so the admin can
-              still type an arbitrary URL if a category doesn't cover it. */}
-          {form.ctaLink === '__custom__' && (
-            <input
-              name="ctaLink"
-              placeholder="Custom link (e.g. /shop?search=diamond)"
-              value={form.ctaLink === '__custom__' ? '' : form.ctaLink}
-              onChange={handleChange}
-              className="input-field"
-              autoFocus
-            />
-          )}
           <input name="order" type="number" placeholder="Display order (0 = first)" value={form.order} onChange={handleChange} className="input-field" />
 
           <div>

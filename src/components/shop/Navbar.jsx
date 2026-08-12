@@ -94,7 +94,12 @@ export default function Navbar() {
                   Admin
                 </Link>
               )}
-              <span className="text-xs text-ink-inverse">Hi, {user.name?.split(' ')[0]}</span>
+              <Link to="/orders" className="text-xs text-ink-secondary hover:text-gold-500">
+                My Orders
+              </Link>
+              <Link to="/account" className="text-xs text-ink-secondary hover:text-gold-500">
+                Hi, {user.name?.split(' ')[0]}
+              </Link>
               <button
                 onClick={() => {
                   logout();
@@ -149,6 +154,12 @@ export default function Navbar() {
                       Admin Dashboard
                     </Link>
                   )}
+                  <Link to="/orders" onClick={() => setMenuOpen(false)} className="py-3 text-ink-secondary border-b border-surface-strong/20">
+                    My Orders
+                  </Link>
+                  <Link to="/account" onClick={() => setMenuOpen(false)} className="py-3 text-ink-secondary border-b border-surface-strong/20">
+                    My Account
+                  </Link>
                   <button
                     onClick={() => {
                       logout();
