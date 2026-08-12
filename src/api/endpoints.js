@@ -50,6 +50,7 @@ export const deletePhone = (phoneId) => api.delete(`/profile/phones/${phoneId}`)
 // --- Users ---
 export const getUsers = (params) => api.get('/users', { params });
 export const getUser = (id) => api.get(`/users/${id}`);
+export const createOrPromoteAdmin = (payload) => api.post('/users/admins', payload);
 
 // --- Campaigns ---
 export const sendCampaign = (payload) => api.post('/campaigns/send', payload);
@@ -67,3 +68,17 @@ export const createBanner = (formData) =>
 export const updateBanner = (id, formData) =>
   api.put(`/banners/${id}`, formData, { headers: { 'Content-Type': 'multipart/form-data' } });
 export const deleteBanner = (id) => api.delete(`/banners/${id}`);
+
+// --- Chat (live messaging with the seller) ---
+export const getMyConversation = () => api.get('/chat/my');
+export const getAllConversations = () => api.get('/chat');
+export const getConversationWithUser = (userId) => api.get(`/chat/${userId}`);
+export const sendChatMessage = (targetUserId, formData) =>
+  api.post(`/chat/${targetUserId}/message`, formData, { headers: { 'Content-Type': 'multipart/form-data' } });
+
+// --- Tickets (formal complaints/support requests) ---
+export const createTicket = (formData) =>
+  api.post('/tickets', formData, { headers: { 'Content-Type': 'multipart/form-data' } });
+export const getMyTickets = () => api.get('/tickets/my');
+export const getAllTickets = (params) => api.get('/tickets', { params });
+export const updateTicketStatus = (id, status) => api.patch(`/tickets/${id}/status`, { status });

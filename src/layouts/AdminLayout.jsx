@@ -12,8 +12,12 @@ import {
   HiOutlineLogout,
   HiOutlineMenu,
   HiOutlineX,
+  HiOutlineChatAlt2,
+  HiOutlineTicket,
+  HiOutlineShieldCheck,
 } from 'react-icons/hi';
 import { useAuth } from '../context/AuthContext';
+import { useChatNotifications } from '../context/ChatNotificationsContext';
 
 const navItems = [
   { to: '/admin', label: 'Overview', icon: HiOutlineViewGrid, end: true },
@@ -22,12 +26,17 @@ const navItems = [
   { to: '/admin/banners', label: 'Homepage Banners', icon: HiOutlinePhotograph },
   { to: '/admin/orders', label: 'Orders', icon: HiOutlineShoppingCart },
   { to: '/admin/users', label: 'Users', icon: HiOutlineUsers },
+  { to: '/admin/chats', label: 'Live Chat', icon: HiOutlineChatAlt2, badgeKey: 'unreadChats' },
+  { to: '/admin/tickets', label: 'Tickets', icon: HiOutlineTicket, badgeKey: 'unreadTickets' },
   { to: '/admin/campaigns', label: 'Campaigns', icon: HiOutlineSpeakerphone },
+  { to: '/admin/admins', label: 'Admins', icon: HiOutlineShieldCheck },
 ];
 
 function SidebarContent({ onNavigate }) {
   const { user, logout } = useAuth();
+  const { unreadChats, unreadTickets } = useChatNotifications();
   const navigate = useNavigate();
+  const badgeValues = { unreadChats, unreadTickets };
 
   return (
     <>
@@ -38,24 +47,34 @@ function SidebarContent({ onNavigate }) {
         <p className="text-xs text-ink-inverse mt-1">Admin Dashboard</p>
       </div>
       <nav className="flex-1 space-y-1">
-        {navItems.map(({ to, label, icon: Icon, end }) => (
-          <NavLink
-            key={to}
-            to={to}
-            end={end}
-            onClick={onNavigate}
-            className={({ isActive }) =>
-              `flex items-center gap-3 rounded-xs px-4 py-3 text-sm transition-colors duration-fast ${
-                isActive
-                  ? 'bg-surface-strong/40 text-gold-600 font-semibold'
-                  : 'text-ink-secondary hover:bg-surface-strong/20 hover:text-ink-primary'
-              }`
-            }
-          >
-            <Icon size={18} />
-            {label}
-          </NavLink>
-        ))}
+        {navItems.map(({ to, label, icon: Icon, end, badgeKey }) => {
+          const badgeValue = badgeKey ? badgeValues[badgeKey] : 0;
+          return (
+            <NavLink
+              key={to}
+              to={to}
+              end={end}
+              onClick={onNavigate}
+              className={({ isActive }) =>
+                `flex items-center justify-between gap-3 rounded-xs px-4 py-3 text-sm transition-colors duration-fast ${
+                  isActive
+                    ? 'bg-surface-strong/40 text-gold-600 font-semibold'
+                    : 'text-ink-secondary hover:bg-surface-strong/20 hover:text-ink-primary'
+                }`
+              }
+            >
+              <span className="flex items-center gap-3">
+                <Icon size={18} />
+                {label}
+              </span>
+              {badgeValue > 0 && (
+                <span className="flex h-5 min-w-5 items-center justify-center rounded-full bg-surface-strong px-1 text-[10px] font-semibold text-ink-primary">
+                  {badgeValue}
+                </span>
+              )}
+            </NavLink>
+          );
+        })}
       </nav>
       <div className="border-t border-surface-strong/30 pt-4 px-2">
         <p className="text-sm text-ink-primary">{user?.name}</p>

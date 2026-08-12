@@ -1,5 +1,6 @@
 import { createContext, useContext, useState, useEffect, useCallback } from 'react';
 import { getMe } from '../api/endpoints';
+import { connectSocket, disconnectSocket } from '../socket';
 
 const AuthContext = createContext(null);
 
@@ -16,6 +17,13 @@ export function AuthProvider({ children }) {
       setLoading(false);
       return;
     }
+    // Connect the socket immediately (not inside .then() below) - the server
+    // independently verifies this same token on the socket handshake, so
+    // there's no security gap in connecting optimistically. This avoids a
+    // race where ChatNotificationsContext's effect runs before the socket
+    // exists yet on a page refresh where the user was already logged in.
+    connectSocket(token);
+
     // Validate token is still good & refresh user data on app load
     getMe()
       .then((res) => {
@@ -32,12 +40,14 @@ export function AuthProvider({ children }) {
     localStorage.setItem('token', token);
     localStorage.setItem('user', JSON.stringify(userData));
     setUser(userData);
+    connectSocket(token);
   }, []);
 
   const logout = useCallback(() => {
     localStorage.removeItem('token');
     localStorage.removeItem('user');
     setUser(null);
+    disconnectSocket();
   }, []);
 
   const isAdmin = user?.role === 'admin';

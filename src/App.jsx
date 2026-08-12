@@ -15,6 +15,9 @@ import OrderSuccess from './pages/OrderSuccess';
 import MyOrders from './pages/MyOrders';
 import OrderTracking from './pages/OrderTracking';
 import Account from './pages/Account';
+import Help from './pages/Help';
+import Chat from './pages/Chat';
+import Tickets from './pages/Tickets';
 import NotFound from './pages/NotFound';
 
 import AdminOverview from './pages/admin/AdminOverview';
@@ -25,6 +28,9 @@ import AdminOrders from './pages/admin/AdminOrders';
 import AdminOrderDetail from './pages/admin/AdminOrderDetail';
 import AdminUsers from './pages/admin/AdminUsers';
 import AdminCampaigns from './pages/admin/AdminCampaigns';
+import AdminChats from './pages/admin/AdminChats';
+import AdminTickets from './pages/admin/AdminTickets';
+import AdminAdmins from './pages/admin/AdminAdmins';
 
 export default function App() {
   return (
@@ -87,6 +93,30 @@ export default function App() {
               </ProtectedRoute>
             }
           />
+          <Route
+            path="/help"
+            element={
+              <ProtectedRoute>
+                <Help />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/chat"
+            element={
+              <ProtectedRoute>
+                <Chat />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/tickets"
+            element={
+              <ProtectedRoute>
+                <Tickets />
+              </ProtectedRoute>
+            }
+          />
           <Route path="*" element={<NotFound />} />
         </Route>
 
@@ -107,6 +137,9 @@ export default function App() {
           <Route path="orders/:id" element={<AdminOrderDetail />} />
           <Route path="users" element={<AdminUsers />} />
           <Route path="campaigns" element={<AdminCampaigns />} />
+          <Route path="chats" element={<AdminChats />} />
+          <Route path="tickets" element={<AdminTickets />} />
+          <Route path="admins" element={<AdminAdmins />} />
         </Route>
       </Routes>
     </>

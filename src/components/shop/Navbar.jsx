@@ -1,9 +1,10 @@
 import { useState, useEffect, useRef } from 'react';
 import { Link, NavLink, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { HiOutlineShoppingBag, HiOutlineUser, HiOutlineMenu, HiOutlineX, HiOutlineSearch } from 'react-icons/hi';
+import { HiOutlineShoppingBag, HiOutlineUser, HiOutlineMenu, HiOutlineX, HiOutlineSearch, HiOutlineChatAlt2 } from 'react-icons/hi';
 import { useAuth } from '../../context/AuthContext';
 import { useCart } from '../../context/CartContext';
+import { useChatNotifications } from '../../context/ChatNotificationsContext';
 
 const links = [
   { to: '/shop', label: 'All Jewellery' },
@@ -18,6 +19,7 @@ export default function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
   const { isAuthenticated, isAdmin, user, logout } = useAuth();
   const { count } = useCart();
+  const { unreadChats } = useChatNotifications();
   const navigate = useNavigate();
   const lastScrollY = useRef(0);
 
@@ -86,6 +88,17 @@ export default function Navbar() {
               </span>
             )}
           </Link>
+
+          {isAuthenticated && (
+            <Link to="/help" aria-label="Help and chat" className="relative hidden text-ink-secondary hover:text-gold-500 transition-colors sm:block">
+              <HiOutlineChatAlt2 size={20} />
+              {unreadChats > 0 && (
+                <span className="absolute -top-2 -right-2 flex h-4 w-4 items-center justify-center rounded-full bg-surface-strong text-[10px] font-bold text-ink-primary">
+                  {unreadChats}
+                </span>
+              )}
+            </Link>
+          )}
 
           {isAuthenticated ? (
             <div className="hidden sm:flex items-center gap-3">
@@ -156,6 +169,14 @@ export default function Navbar() {
                   )}
                   <Link to="/orders" onClick={() => setMenuOpen(false)} className="py-3 text-ink-secondary border-b border-surface-strong/20">
                     My Orders
+                  </Link>
+                  <Link to="/help" onClick={() => setMenuOpen(false)} className="flex items-center justify-between py-3 text-ink-secondary border-b border-surface-strong/20">
+                    Help & Support
+                    {unreadChats > 0 && (
+                      <span className="flex h-5 min-w-5 items-center justify-center rounded-full bg-surface-strong px-1 text-[10px] font-semibold text-ink-primary">
+                        {unreadChats}
+                      </span>
+                    )}
                   </Link>
                   <Link to="/account" onClick={() => setMenuOpen(false)} className="py-3 text-ink-secondary border-b border-surface-strong/20">
                     My Account
