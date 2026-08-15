@@ -16,7 +16,9 @@ const SORT_OPTIONS = [
 export default function Shop() {
   const [searchParams, setSearchParams] = useSearchParams();
   const [products, setProducts] = useState([]);
+  // const [categories, setCategories] = useState([]);
   const [categories, setCategories] = useState([]);
+  const [categoriesLoaded, setCategoriesLoaded] = useState(false);
   const [loading, setLoading] = useState(true);
   const [filtersOpen, setFiltersOpen] = useState(false);
   const [meta, setMeta] = useState({ total: 0, pages: 1, page: 1 });
@@ -26,16 +28,29 @@ export default function Shop() {
   const sort = searchParams.get('sort') || '-createdAt';
   const page = Number(searchParams.get('page')) || 1;
 
+  // useEffect(() => {
+  //   getCategories().then((res) => setCategories(res.data.data)).catch(() => {});
+  // }, []);
+
+  // Category is carried in the URL as a human-readable slug; resolve it to the
+  // Mongo _id the backend actually filters on once categories have loaded.
+  // const fetchProducts = useCallback(() => {
+  //   if (categorySlug && categories.length === 0) return; // wait for categories so filter isn't dropped
   useEffect(() => {
-    getCategories().then((res) => setCategories(res.data.data)).catch(() => {});
+    getCategories()
+      .then((res) => setCategories(res.data.data))
+      .catch(() => {})
+      .finally(() => setCategoriesLoaded(true));
   }, []);
 
   // Category is carried in the URL as a human-readable slug; resolve it to the
   // Mongo _id the backend actually filters on once categories have loaded.
   const fetchProducts = useCallback(() => {
-    if (categorySlug && categories.length === 0) return; // wait for categories so filter isn't dropped
+    if (categorySlug && !categoriesLoaded) return; // wait for the categories request to finish (success OR failure)
+    // setLoading(true);
+    // const params = { sort, page, limit: 12 };
     setLoading(true);
-    const params = { sort, page, limit: 12 };
+    const params = { sort, page, limit: 500 };
     if (categorySlug) {
       const match = categories.find((c) => c.slug === categorySlug);
       if (match) params.category = match._id;
@@ -49,7 +64,8 @@ export default function Shop() {
       })
       .catch(() => {})
       .finally(() => setLoading(false));
-  }, [categorySlug, categories, search, sort, page]);
+  // }, [categorySlug, categories, search, sort, page]);
+  }, [categorySlug, categories, categoriesLoaded, search, sort, page]);
 
   useEffect(() => {
     fetchProducts();
@@ -150,7 +166,7 @@ export default function Shop() {
         </div>
       )}
 
-      {meta.pages > 1 && (
+      {/* {meta.pages > 1 && (
         <div className="mt-16 flex justify-center gap-2">
           {Array.from({ length: meta.pages }, (_, i) => i + 1).map((p) => (
             <button
@@ -164,7 +180,7 @@ export default function Shop() {
             </button>
           ))}
         </div>
-      )}
+      )} */}
     </div>
   );
 }

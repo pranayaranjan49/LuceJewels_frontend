@@ -1,15 +1,23 @@
 import { useEffect, useState, useCallback } from 'react';
 import toast from 'react-hot-toast';
 import { HiOutlinePlus, HiOutlinePencil, HiOutlineTrash, HiOutlineEyeOff, HiOutlineEye } from 'react-icons/hi';
+// import {
+//   getAllBannersAdmin,
+//   createBanner,
+//   updateBanner,
+//   deleteBanner,
+// } from '../../api/endpoints';
 import {
   getAllBannersAdmin,
   createBanner,
   updateBanner,
   deleteBanner,
+  getCategories,
 } from '../../api/endpoints';
 import Modal from '../../components/ui/Modal';
 
-const emptyForm = { title: '', subtitle: '', ctaLabel: 'Shop Now', ctaLink: '/shop', order: 0, isActive: true };
+// const emptyForm = { title: '', subtitle: '', ctaLabel: 'Shop Now', ctaLink: '/shop', order: 0, isActive: true };
+const emptyForm = { title: '', subtitle: '', ctaLabel: 'Shop Now', ctaLink: '/shop', textColor: 'dark', order: 0, isActive: true };
 
 export default function AdminBanners() {
   const [banners, setBanners] = useState([]);
@@ -19,6 +27,7 @@ export default function AdminBanners() {
   const [form, setForm] = useState(emptyForm);
   const [file, setFile] = useState(null);
   const [saving, setSaving] = useState(false);
+  const [categories, setCategories] = useState([]);
 
   const fetchAll = useCallback(() => {
     setLoading(true);
@@ -28,7 +37,12 @@ export default function AdminBanners() {
       .finally(() => setLoading(false));
   }, []);
 
+  // useEffect(() => { fetchAll(); }, [fetchAll]);
   useEffect(() => { fetchAll(); }, [fetchAll]);
+
+  useEffect(() => {
+    getCategories().then((res) => setCategories(res.data.data)).catch(() => {});
+  }, []);
 
   const openCreate = () => {
     setEditing(null);
@@ -39,9 +53,13 @@ export default function AdminBanners() {
 
   const openEdit = (b) => {
     setEditing(b);
+    // setForm({
+    //   title: b.title, subtitle: b.subtitle || '', ctaLabel: b.ctaLabel || 'Shop Now',
+    //   ctaLink: b.ctaLink || '/shop', order: b.order || 0, isActive: b.isActive,
+    // });
     setForm({
       title: b.title, subtitle: b.subtitle || '', ctaLabel: b.ctaLabel || 'Shop Now',
-      ctaLink: b.ctaLink || '/shop', order: b.order || 0, isActive: b.isActive,
+      ctaLink: b.ctaLink || '/shop', textColor: b.textColor || 'dark', order: b.order || 0, isActive: b.isActive,
     });
     setFile(null);
     setModalOpen(true);
@@ -147,10 +165,61 @@ export default function AdminBanners() {
         <form onSubmit={handleSubmit} className="space-y-4">
           <input name="title" required placeholder="Headline (e.g. Jewellery worth passing down.)" value={form.title} onChange={handleChange} className="input-field" />
           <textarea name="subtitle" placeholder="Subtitle text" value={form.subtitle} onChange={handleChange} rows={2} className="input-field" />
+          {/* <div className="grid grid-cols-2 gap-4"> */}
+            {/* <input name="ctaLabel" placeholder="Button label" value={form.ctaLabel} onChange={handleChange} className="input-field" /> */}
+            {/* <input name="ctaLink" placeholder="Button link (e.g. /shop)" value={form.ctaLink} onChange={handleChange} className="input-field" /> */}
+          {/* </div> */}
+          {/* <input name="order" type="number" placeholder="Display order (0 = first)" value={form.order} onChange={handleChange} className="input-field" /> */}
           <div className="grid grid-cols-2 gap-4">
             <input name="ctaLabel" placeholder="Button label" value={form.ctaLabel} onChange={handleChange} className="input-field" />
-            <input name="ctaLink" placeholder="Button link (e.g. /shop)" value={form.ctaLink} onChange={handleChange} className="input-field" />
+            <select
+              value={form.ctaLink}
+              onChange={(e) => setForm((f) => ({ ...f, ctaLink: e.target.value }))}
+              className="input-field"
+            >
+              <option value="/shop">All Jewellery</option>
+              {categories.map((c) => (
+                <option key={c._id} value={`/shop?category=${c.slug}`}>
+                  {c.name}
+                </option>
+              ))}
+              <option value="__custom__">Custom link…</option>
+            </select>
           </div>
+
+          {form.ctaLink === '__custom__' && (
+            <input
+              placeholder="Custom link (e.g. /shop?search=diamond)"
+              value={form.ctaLink === '__custom__' ? '' : form.ctaLink}
+              onChange={(e) => setForm((f) => ({ ...f, ctaLink: e.target.value }))}
+              className="input-field"
+              autoFocus
+            />
+          )}
+
+          <div>
+            <label className="eyebrow mb-2 block">Text Color (over the image)</label>
+            <div className="flex gap-3">
+              {[
+                { value: 'dark', label: 'Dark', swatchClass: 'bg-ink-primary' },
+                { value: 'gold', label: 'Gold', swatchClass: 'bg-gold-400' },
+                { value: 'pink', label: 'Pink', swatchClass: 'bg-surface-strong' },
+              ].map((opt) => (
+                <button
+                  key={opt.value}
+                  type="button"
+                  onClick={() => setForm((f) => ({ ...f, textColor: opt.value }))}
+                  className={`flex items-center gap-2 rounded-sm border px-3 py-2 text-xs transition-colors ${
+                    form.textColor === opt.value ? 'border-gold-400 bg-gold-400/10' : 'border-ink-primary/15'
+                  }`}
+                >
+                  <span className={`h-3 w-3 rounded-full ${opt.swatchClass}`} />
+                  {opt.label}
+                </button>
+              ))}
+            </div>
+          </div>
+
           <input name="order" type="number" placeholder="Display order (0 = first)" value={form.order} onChange={handleChange} className="input-field" />
 
           <div>

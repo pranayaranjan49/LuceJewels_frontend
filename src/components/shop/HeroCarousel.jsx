@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
-import { Link } from 'react-router-dom';
+// import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { HiChevronLeft, HiChevronRight } from 'react-icons/hi';
 import { getBanners } from '../../api/endpoints';
@@ -36,7 +37,15 @@ const FALLBACK_SLIDES = [
 // CHANGED: was 4500ms - now slides every 4 seconds as requested.
 const AUTOPLAY_DELAY = 4000;
 
+const TEXT_COLOR_CLASSES = {
+  dark: { title: 'text-ink-primary', subtitle: 'text-ink-secondary' },
+  gold: { title: 'text-gold-500', subtitle: 'text-gold-300' },
+  pink: { title: 'text-surface-strong', subtitle: 'text-surface-strong/70' },
+};
+// export default function HeroCarousel() {
+//   const [slides, setSlides] = useState(FALLBACK_SLIDES);
 export default function HeroCarousel() {
+  const navigate = useNavigate();
   const [slides, setSlides] = useState(FALLBACK_SLIDES);
   const [index, setIndex] = useState(0);
   const [direction, setDirection] = useState(1);
@@ -97,8 +106,18 @@ export default function HeroCarousel() {
             initial="enter"
             animate="center"
             exit="exit"
-            transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
-            className="absolute inset-0"
+          //   transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+          //   className="absolute inset-0"
+          //   drag={slides.length > 1 ? 'x' : false}
+          //   dragConstraints={{ left: 0, right: 0 }}
+          //   dragElastic={0.2}
+          //   onDragEnd={(e, info) => {
+          //     if (info.offset.x < -50) next();
+          //     else if (info.offset.x > 50) prev();
+          //   }}
+          // >
+          transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+            className="absolute inset-0 cursor-pointer"
             drag={slides.length > 1 ? 'x' : false}
             dragConstraints={{ left: 0, right: 0 }}
             dragElastic={0.2}
@@ -106,6 +125,7 @@ export default function HeroCarousel() {
               if (info.offset.x < -50) next();
               else if (info.offset.x > 50) prev();
             }}
+            onTap={() => navigate(slide.ctaLink || '/shop')}
           >
             <img
               src={slide.image?.url}
@@ -118,13 +138,26 @@ export default function HeroCarousel() {
             <div className="relative z-10 flex h-full w-full items-end px-5 pb-5 sm:px-8 sm:pb-7 lg:px-10 lg:pb-9">
               <div className="max-w-sm sm:max-w-md">
                 <p className="eyebrow text-[11px] sm:text-xs">Luxe Jewels</p>
-                <h1 className="mt-2 font-display text-xl leading-[1.1] text-ink-primary sm:mt-3 sm:text-3xl lg:text-4xl">
+                {/* <h1 className="mt-2 font-display text-xl leading-[1.1] text-ink-primary sm:mt-3 sm:text-3xl lg:text-4xl">
                   {slide.title}
                 </h1>
                 {slide.subtitle && (
                   <p className="mt-2 hidden text-sm text-ink-secondary sm:block">{slide.subtitle}</p>
+                )} */}
+                <h1 className={`mt-2 font-display text-xl leading-[1.1] sm:mt-3 sm:text-3xl lg:text-4xl ${(TEXT_COLOR_CLASSES[slide.textColor] || TEXT_COLOR_CLASSES.dark).title}`}>
+                  {slide.title}
+                </h1>
+                {slide.subtitle && (
+                  <p className={`mt-2 hidden text-sm sm:block ${(TEXT_COLOR_CLASSES[slide.textColor] || TEXT_COLOR_CLASSES.dark).subtitle}`}>{slide.subtitle}</p>
                 )}
-                <Link to={slide.ctaLink || '/shop'} className="btn-primary mt-4 inline-flex px-6 py-2.5 text-sm sm:mt-5 sm:px-8 sm:py-3">
+                {/* <Link to={slide.ctaLink || '/shop'} className="btn-primary mt-4 inline-flex px-6 py-2.5 text-sm sm:mt-5 sm:px-8 sm:py-3">
+                  {slide.ctaLabel || 'Shop Now'}
+                </Link> */}
+                <Link
+                  to={slide.ctaLink || '/shop'}
+                  onClick={(e) => e.stopPropagation()}
+                  className="btn-primary mt-4 inline-flex px-6 py-2.5 text-sm sm:mt-5 sm:px-8 sm:py-3"
+                >
                   {slide.ctaLabel || 'Shop Now'}
                 </Link>
               </div>
